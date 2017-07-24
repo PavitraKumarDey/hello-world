@@ -1,0 +1,95 @@
+package CollectionApi;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class MyArrayList implements Iterable {
+	Object[] a;
+	int p;
+
+	MyArrayList() {
+		this(10);
+	}
+
+	public MyArrayList(int i) {
+		a = new Object[i];
+	}
+
+	public void add(Object x) {
+		if (p >= size())
+			increase();
+		a[p++] = x;
+	}
+
+	public void increase() {
+		Object[] temp = new Object[2 * a.length];
+		for (int i = 0; i < a.length; i++) {
+			temp[i] = a[i];
+		}
+		a = temp;
+
+	}
+
+	public int size() {
+		return p;
+	}
+
+	public Object get(int index) {
+		if (index >= size())
+			throw new ArrayIndexOutOfBoundsException();
+		return a[index];
+	}
+
+	public Iterator iterator() {
+		return new Iterator() {
+			int i = -1;
+			boolean removeFlag = false;
+
+			@Override
+			public boolean hasNext() {
+				if (i < size() - 1)
+					return true;
+				return false;
+			}
+
+			@Override
+			public Object next() {
+				if (!hasNext())
+					throw new NoSuchElementException();
+				removeFlag = true;
+				return a[++i];
+			}
+
+			public void remove() {
+				if (!removeFlag)
+					throw new NoSuchElementException();
+				MyArrayList.this.remove(i);
+				removeFlag = false;
+			}
+
+		};
+
+	}
+
+	public void remove(int index) {
+		for (int i = index; i <= size() - 1; i++) {
+			a[i] = a[i + 1];
+		}
+		p--;
+	}
+
+	public String toString() {
+		if (size() == 0)
+			return "[]";
+		else {
+			String s = "[" + a[0];
+			for (int i = 1; i < size(); i++) {
+				s += "," + a[i];
+			}
+			s += "]";
+			return s;
+		}
+
+	}
+
+}
